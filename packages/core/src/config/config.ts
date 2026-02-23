@@ -1233,7 +1233,7 @@ export class Config {
   }
 
   getDisableLoopDetection(): boolean {
-    return this.disableLoopDetection ?? false;
+    return this.disableLoopDetection;
   }
 
   setModel(newModel: string, isTemporary: boolean = true): void {

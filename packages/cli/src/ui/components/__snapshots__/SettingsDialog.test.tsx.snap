@@ -10,29 +10,31 @@ exports[`SettingsDialog > Initial Rendering > should render settings list with v
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Vim Mode                                                                               false  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│  ● Vim Mode                                                                                 Off  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                      true  │
+│    Auto Update                                                                               On  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                                false  │
+│    Debug Keystroke Logging                                                                  Off  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -57,29 +59,31 @@ exports[`SettingsDialog > Snapshot Tests > should render 'accessibility settings
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Vim Mode                                                                               true*  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│  ● Vim Mode                                                                                 On*  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                      true  │
+│    Auto Update                                                                               On  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                                false  │
+│    Debug Keystroke Logging                                                                  Off  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -104,29 +108,31 @@ exports[`SettingsDialog > Snapshot Tests > should render 'all boolean settings d
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Vim Mode                                                                              false*  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│  ● Vim Mode                                                                                Off*  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                     true*  │
+│    Auto Update                                                                              On*  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                               false*  │
+│    Debug Keystroke Logging                                                                 Off*  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -151,29 +157,31 @@ exports[`SettingsDialog > Snapshot Tests > should render 'default state' correct
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Vim Mode                                                                               false  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│  ● Vim Mode                                                                                 Off  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                      true  │
+│    Auto Update                                                                               On  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                                false  │
+│    Debug Keystroke Logging                                                                  Off  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -198,29 +206,31 @@ exports[`SettingsDialog > Snapshot Tests > should render 'file filtering setting
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Vim Mode                                                                               false  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│  ● Vim Mode                                                                                 Off  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                      true  │
+│    Auto Update                                                                               On  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                                false  │
+│    Debug Keystroke Logging                                                                  Off  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -245,29 +255,31 @@ exports[`SettingsDialog > Snapshot Tests > should render 'focused on scope selec
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│    Vim Mode                                                                               false  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│    Vim Mode                                                                                 Off  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                      true  │
+│    Auto Update                                                                               On  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                                false  │
+│    Debug Keystroke Logging                                                                  Off  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -292,29 +304,31 @@ exports[`SettingsDialog > Snapshot Tests > should render 'mixed boolean and numb
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Vim Mode                                                                              false*  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│  ● Vim Mode                                                                                Off*  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                    false*  │
+│    Auto Update                                                                             Off*  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                                false  │
+│    Debug Keystroke Logging                                                                  Off  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -339,29 +353,31 @@ exports[`SettingsDialog > Snapshot Tests > should render 'tools and security set
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Vim Mode                                                                               false  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│  ● Vim Mode                                                                                 Off  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                      true  │
+│    Auto Update                                                                               On  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                                false  │
+│    Debug Keystroke Logging                                                                  Off  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -386,29 +402,31 @@ exports[`SettingsDialog > Snapshot Tests > should render 'various boolean settin
 │ ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ │
 │                                                                                                  │
 │  ▲                                                                                               │
-│  ● Vim Mode                                                                               true*  │
+│  General ──────────────────────────────────────────────────────────────────────────────────────  │
+│                                                                                                  │
+│  ● Vim Mode                                                                                 On*  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
-│    Default Approval Mode                                                                Default  │
-│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
-│                                                                                                  │
-│    Enable Auto Update                                                                    false*  │
+│    Auto Update                                                                             Off*  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Notifications                                                                   false  │
-│    Enable run-event notifications for action-required prompts and session completion. …          │
+│    Notifications                                                                            Off  │
+│    Enable run-event notifications for action-required prompts and session completion. Cu…        │
 │                                                                                                  │
 │    Plan Directory                                                                     undefined  │
 │    The directory where planning artifacts are stored. If not specified, defaults t…              │
 │                                                                                                  │
-│    Debug Keystroke Logging                                                                true*  │
+│    Debug Keystroke Logging                                                                  On*  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
-│    Enable Session Cleanup                                                                 false  │
+│    Session Cleanup                                                                          Off  │
 │    Enable automatic session cleanup                                                              │
 │                                                                                                  │
-│    Keep chat history                                                                  undefined  │
+│    Chat History Period                                                                undefined  │
 │    Automatically delete chats older than this time period (e.g., "30d", "7d", "24h…              │
+│                                                                                                  │
+│    Output Format                                                                           Text  │
+│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
