@@ -1006,7 +1006,7 @@ export const useGeminiStream = (
           text: `Context compressed`,
           color: theme.status.warning,
           marginBottom: 1,
-        },
+        } as HistoryItemInfo,
         userMessageTimestamp,
       );
 
@@ -1015,7 +1015,7 @@ export const useGeminiStream = (
           type: MessageType.INFO,
           text: `Threshold: ${thresholdDisplay}. Change this in /settings.`,
           color: theme.text.secondary,
-        },
+        } as HistoryItemInfo,
         userMessageTimestamp,
       );
     },
