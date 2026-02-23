@@ -297,7 +297,6 @@ export const Composer = ({ isFocused = true }: { isFocused?: boolean }) => {
                   <ContextUsageDisplay
                     promptTokenCount={uiState.sessionStats.lastPromptTokenCount}
                     model={uiState.currentModel}
-                    terminalWidth={uiState.terminalWidth}
                   />
                 )}
                 {showShortcutsHint && (
