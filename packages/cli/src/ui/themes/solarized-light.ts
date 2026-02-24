@@ -49,6 +49,7 @@ const semanticColors: SemanticColors = {
     comment: '#93a1a1',
     symbol: '#586e75',
     dark: '#eee8d5',
+    focus: '#859900',
     gradient: ['#268bd2', '#2aa198'],
   },
   status: {
