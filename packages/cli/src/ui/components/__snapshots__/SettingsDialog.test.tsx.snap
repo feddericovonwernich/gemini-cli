@@ -13,26 +13,26 @@ exports[`SettingsDialog > Initial Rendering > should render settings list with v
 │  ● Vim Mode                                                                               false  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                      true  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                               false  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                                false  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -43,7 +43,8 @@ exports[`SettingsDialog > Initial Rendering > should render settings list with v
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;
 
 exports[`SettingsDialog > Snapshot Tests > should render 'accessibility settings enabled' correctly 1`] = `
@@ -59,26 +60,26 @@ exports[`SettingsDialog > Snapshot Tests > should render 'accessibility settings
 │  ● Vim Mode                                                                               true*  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                      true  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                               false  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                                false  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -89,7 +90,8 @@ exports[`SettingsDialog > Snapshot Tests > should render 'accessibility settings
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;
 
 exports[`SettingsDialog > Snapshot Tests > should render 'all boolean settings disabled' correctly 1`] = `
@@ -105,26 +107,26 @@ exports[`SettingsDialog > Snapshot Tests > should render 'all boolean settings d
 │  ● Vim Mode                                                                              false*  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                     true*  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                              false*  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                               false*  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -135,7 +137,8 @@ exports[`SettingsDialog > Snapshot Tests > should render 'all boolean settings d
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;
 
 exports[`SettingsDialog > Snapshot Tests > should render 'default state' correctly 1`] = `
@@ -151,26 +154,26 @@ exports[`SettingsDialog > Snapshot Tests > should render 'default state' correct
 │  ● Vim Mode                                                                               false  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                      true  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                               false  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                                false  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -181,7 +184,8 @@ exports[`SettingsDialog > Snapshot Tests > should render 'default state' correct
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;
 
 exports[`SettingsDialog > Snapshot Tests > should render 'file filtering settings configured' correctly 1`] = `
@@ -197,26 +201,26 @@ exports[`SettingsDialog > Snapshot Tests > should render 'file filtering setting
 │  ● Vim Mode                                                                               false  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                      true  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                               false  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                                false  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -227,7 +231,8 @@ exports[`SettingsDialog > Snapshot Tests > should render 'file filtering setting
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;
 
 exports[`SettingsDialog > Snapshot Tests > should render 'focused on scope selector' correctly 1`] = `
@@ -243,26 +248,26 @@ exports[`SettingsDialog > Snapshot Tests > should render 'focused on scope selec
 │    Vim Mode                                                                               false  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                      true  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                               false  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                                false  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -273,7 +278,8 @@ exports[`SettingsDialog > Snapshot Tests > should render 'focused on scope selec
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;
 
 exports[`SettingsDialog > Snapshot Tests > should render 'mixed boolean and number settings' correctly 1`] = `
@@ -289,26 +295,26 @@ exports[`SettingsDialog > Snapshot Tests > should render 'mixed boolean and numb
 │  ● Vim Mode                                                                              false*  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                    false*  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                               false  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                                false  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -319,7 +325,8 @@ exports[`SettingsDialog > Snapshot Tests > should render 'mixed boolean and numb
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;
 
 exports[`SettingsDialog > Snapshot Tests > should render 'tools and security settings' correctly 1`] = `
@@ -335,26 +342,26 @@ exports[`SettingsDialog > Snapshot Tests > should render 'tools and security set
 │  ● Vim Mode                                                                               false  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                      true  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                               false  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                                false  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -365,7 +372,8 @@ exports[`SettingsDialog > Snapshot Tests > should render 'tools and security set
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;
 
 exports[`SettingsDialog > Snapshot Tests > should render 'various boolean settings enabled' correctly 1`] = `
@@ -381,26 +389,26 @@ exports[`SettingsDialog > Snapshot Tests > should render 'various boolean settin
 │  ● Vim Mode                                                                               true*  │
 │    Enable Vim keybindings                                                                        │
 │                                                                                                  │
+│    Default Approval Mode                                                                Default  │
+│    The default approval mode for tool execution. 'default' prompts for approval, 'au…            │
+│                                                                                                  │
 │    Enable Auto Update                                                                    false*  │
 │    Enable automatic updates.                                                                     │
 │                                                                                                  │
-│    Enable Prompt Completion                                                               true*  │
-│    Enable AI-powered prompt completion suggestions while typing.                                 │
+│    Enable Notifications                                                                   false  │
+│    Enable run-event notifications for action-required prompts and session completion. …          │
+│                                                                                                  │
+│    Plan Directory                                                                     undefined  │
+│    The directory where planning artifacts are stored. If not specified, defaults t…              │
+│                                                                                                  │
+│    Max Chat Model Attempts                                                                   10  │
+│    Maximum number of attempts for requests to the main chat model. Cannot exceed 10.             │
 │                                                                                                  │
 │    Debug Keystroke Logging                                                                true*  │
 │    Enable debug logging of keystrokes to the console.                                            │
 │                                                                                                  │
 │    Enable Session Cleanup                                                                 false  │
 │    Enable automatic session cleanup                                                              │
-│                                                                                                  │
-│    Output Format                                                                           Text  │
-│    The format of the CLI output. Can be \`text\` or \`json\`.                                        │
-│                                                                                                  │
-│    Auto Theme Switching                                                                    true  │
-│    Automatically switch between default light and dark themes based on terminal backgro…         │
-│                                                                                                  │
-│    Terminal Background Polling Interval                                                      60  │
-│    Interval in seconds to poll the terminal background color.                                    │
 │                                                                                                  │
 │  ▼                                                                                               │
 │                                                                                                  │
@@ -411,5 +419,6 @@ exports[`SettingsDialog > Snapshot Tests > should render 'various boolean settin
 │                                                                                                  │
 │  (Use Enter to select, Ctrl+L to reset, Tab to change focus, Esc to close)                       │
 │                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯"
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+"
 `;

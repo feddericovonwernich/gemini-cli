@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import { Box, Text } from 'ink';
 import type { ThoughtSummary } from '@google/gemini-cli-core';
 import { theme } from '../../semantic-colors.js';
+import { normalizeEscapedNewlines } from '../../utils/textUtils.js';
 
 interface ThinkingMessageProps {
   thought: ThoughtSummary;
@@ -29,10 +30,6 @@ function splitGraphemes(value: string): string[] {
   }
 
   return Array.from(value);
-}
-
-function normalizeEscapedNewlines(value: string): string {
-  return value.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n');
 }
 
 function normalizeThoughtLines(thought: ThoughtSummary): string[] {
@@ -117,6 +114,10 @@ function wrapLineToWidth(line: string, width: number): string[] {
   return wrapped;
 }
 
+/**
+ * Renders a model's thought as a distinct bubble.
+ * Leverages Ink layout for wrapping and borders.
+ */
 export const ThinkingMessage: React.FC<ThinkingMessageProps> = ({
   thought,
   terminalWidth,
@@ -141,16 +142,19 @@ export const ThinkingMessage: React.FC<ThinkingMessageProps> = ({
     [fullLines, contentWidth],
   );
 
-  if (
-    fullSummaryDisplayLines.length === 0 &&
-    fullBodyDisplayLines.length === 0
-  ) {
+  if (fullLines.length === 0) {
     return null;
   }
 
   const verticalLine = (
     <Box width={VERTICAL_LINE_WIDTH}>
-      <Text color={theme.text.secondary}>│ </Text>
+      <Text color={theme.ui.dark}>│ </Text>
+    </Box>
+  );
+
+  const topCap = (
+    <Box width={VERTICAL_LINE_WIDTH}>
+      <Text color={theme.ui.dark}>╷ </Text>
     </Box>
   );
 
@@ -163,13 +167,11 @@ export const ThinkingMessage: React.FC<ThinkingMessageProps> = ({
       {isFirstThinking && (
         <>
           <Text color={theme.text.primary} italic>
-            {' '}
-            Thinking...{' '}
+            {' Thinking...'}
           </Text>
           <Box flexDirection="row">
             <Box width={THINKING_LEFT_PADDING} />
-            {verticalLine}
-            <Text> </Text>
+            {topCap}
           </Box>
         </>
       )}
@@ -178,7 +180,6 @@ export const ThinkingMessage: React.FC<ThinkingMessageProps> = ({
         <Box flexDirection="row">
           <Box width={THINKING_LEFT_PADDING} />
           {verticalLine}
-          <Text> </Text>
         </Box>
       )}
 

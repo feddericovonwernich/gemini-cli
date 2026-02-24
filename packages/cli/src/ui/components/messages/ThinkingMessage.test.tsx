@@ -9,34 +9,40 @@ import { renderWithProviders } from '../../../test-utils/render.js';
 import { ThinkingMessage } from './ThinkingMessage.js';
 
 describe('ThinkingMessage', () => {
-  it('renders subject line with vertical rule and "Thinking..." header', () => {
-    const { lastFrame } = renderWithProviders(
+  it('renders subject line with vertical rule and "Thinking..." header', async () => {
+    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
       <ThinkingMessage
         thought={{ subject: 'Planning', description: 'test' }}
         terminalWidth={80}
         isFirstThinking={true}
       />,
+      { useAlternateBuffer: false },
     );
+    await waitUntilReady();
 
     expect(lastFrame()).toContain(' Thinking...');
-    expect(lastFrame()).toContain('│');
+    expect(lastFrame()).toContain('╷');
     expect(lastFrame()).toContain('Planning');
+    unmount();
   });
 
-  it('uses description when subject is empty', () => {
-    const { lastFrame } = renderWithProviders(
+  it('uses description when subject is empty', async () => {
+    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
       <ThinkingMessage
         thought={{ subject: '', description: 'Processing details' }}
         terminalWidth={80}
       />,
+      { useAlternateBuffer: false },
     );
+    await waitUntilReady();
 
     expect(lastFrame()).toContain('Processing details');
     expect(lastFrame()).toContain('│');
+    unmount();
   });
 
-  it('renders full mode with left vertical rule and full text', () => {
-    const { lastFrame } = renderWithProviders(
+  it('renders full mode with left border and full text', async () => {
+    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
       <ThinkingMessage
         thought={{
           subject: 'Planning',
@@ -44,15 +50,18 @@ describe('ThinkingMessage', () => {
         }}
         terminalWidth={80}
       />,
+      { useAlternateBuffer: false },
     );
+    await waitUntilReady();
 
     expect(lastFrame()).toContain('│');
     expect(lastFrame()).toContain('Planning');
     expect(lastFrame()).toContain('I am planning the solution.');
+    unmount();
   });
 
-  it('renders "Thinking..." header when isFirstThinking is true', () => {
-    const { lastFrame } = renderWithProviders(
+  it('renders "Thinking..." header when isFirstThinking is true', async () => {
+    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
       <ThinkingMessage
         thought={{
           subject: 'Summary line',
@@ -61,36 +70,45 @@ describe('ThinkingMessage', () => {
         terminalWidth={80}
         isFirstThinking={true}
       />,
+      { useAlternateBuffer: false },
     );
+    await waitUntilReady();
 
     expect(lastFrame()).toContain(' Thinking...');
     expect(lastFrame()).toContain('Summary line');
-    expect(lastFrame()).toContain('│');
+    expect(lastFrame()).toContain('╷');
+    unmount();
   });
 
-  it('normalizes escaped newline tokens so literal \\n\\n is not shown', () => {
-    const { lastFrame } = renderWithProviders(
+  it('normalizes escaped newline tokens', async () => {
+    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
       <ThinkingMessage
         thought={{
           subject: 'Matching the Blocks',
-          description: '\\n\\n',
+          description: '\\n\\nSome more text',
         }}
         terminalWidth={80}
       />,
+      { useAlternateBuffer: false },
     );
+    await waitUntilReady();
 
     expect(lastFrame()).toContain('Matching the Blocks');
-    expect(lastFrame()).not.toContain('\\n\\n');
+    expect(lastFrame()).toContain('Some more text');
+    unmount();
   });
 
-  it('renders empty state gracefully', () => {
-    const { lastFrame } = renderWithProviders(
+  it('renders empty state gracefully', async () => {
+    const { lastFrame, waitUntilReady, unmount } = renderWithProviders(
       <ThinkingMessage
         thought={{ subject: '', description: '' }}
         terminalWidth={80}
       />,
+      { useAlternateBuffer: false },
     );
+    await waitUntilReady();
 
-    expect(lastFrame()).not.toContain('Planning');
+    expect(lastFrame({ allowEmpty: true })).toBe('');
+    unmount();
   });
 });

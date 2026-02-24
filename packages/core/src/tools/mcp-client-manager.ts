@@ -176,6 +176,20 @@ export class McpClientManager {
     name: string,
     config: MCPServerConfig,
   ): Promise<void> {
+    const existing = this.clients.get(name);
+    if (
+      existing &&
+      existing.getServerConfig().extension?.id !== config.extension?.id
+    ) {
+      const extensionText = config.extension
+        ? ` from extension "${config.extension.name}"`
+        : '';
+      debugLogger.warn(
+        `Skipping MCP config for server with name "${name}"${extensionText} as it already exists.`,
+      );
+      return;
+    }
+
     // Always track server config for UI display
     this.allServerConfigs.set(name, config);
 
@@ -191,7 +205,6 @@ export class McpClientManager {
     }
     // User-disabled servers: disconnect if running, don't start
     if (await this.isDisabledByUser(name)) {
-      const existing = this.clients.get(name);
       if (existing) {
         await this.disconnectClient(name);
       }
@@ -201,16 +214,6 @@ export class McpClientManager {
       return;
     }
     if (config.extension && !config.extension.isActive) {
-      return;
-    }
-    const existing = this.clients.get(name);
-    if (existing && existing.getServerConfig().extension !== config.extension) {
-      const extensionText = config.extension
-        ? ` from extension "${config.extension.name}"`
-        : '';
-      debugLogger.warn(
-        `Skipping MCP config for server with name "${name}"${extensionText} as it already exists.`,
-      );
       return;
     }
 
@@ -337,6 +340,15 @@ export class McpClientManager {
         this.maybeDiscoverMcpServer(name, config),
       ),
     );
+
+    // If every configured server was skipped (for example because all are
+    // disabled by user settings), no discovery promise is created. In that
+    // case we must still mark discovery complete or the UI will wait forever.
+    if (this.discoveryState === MCPDiscoveryState.IN_PROGRESS) {
+      this.discoveryState = MCPDiscoveryState.COMPLETED;
+      this.eventEmitter?.emit('mcp-client-update', this.clients);
+    }
+
     await this.cliConfig.refreshMcpContext();
   }
 

@@ -23,6 +23,7 @@ const __dirname = path.dirname(__filename);
 
 // Determine the monorepo root (assuming eslint.config.js is at the root)
 const projectRoot = __dirname;
+const currentYear = new Date().getFullYear();
 
 export default tseslint.config(
   {
@@ -37,6 +38,7 @@ export default tseslint.config(
       'dist/**',
       'evals/**',
       'packages/test-utils/**',
+      '.gemini/skills/**',
     ],
   },
   eslint.configs.recommended,
@@ -54,7 +56,7 @@ export default tseslint.config(
   },
   {
     // Import specific config
-    files: ['packages/cli/src/**/*.{ts,tsx}'], // Target only TS/TSX in the cli package
+    files: ['packages/*/src/**/*.{ts,tsx}'], // Target all TS/TSX in the packages
     plugins: {
       import: importPlugin,
     },
@@ -198,6 +200,8 @@ export default tseslint.config(
     ignores: ['**/*.test.ts', '**/*.test.tsx'],
     rules: {
       '@typescript-eslint/no-unsafe-type-assertion': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'error',
+      '@typescript-eslint/no-unsafe-return': 'error',
     },
   },
   {
@@ -239,6 +243,18 @@ export default tseslint.config(
     },
   },
   {
+    files: ['packages/sdk/src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          name: '@google/gemini-cli-sdk',
+          message: 'Please use relative imports within the @google/gemini-cli-sdk package.',
+        },
+      ],
+    },
+  },
+  {
     files: ['packages/*/src/**/*.test.{ts,tsx}'],
     plugins: {
       vitest,
@@ -267,8 +283,8 @@ export default tseslint.config(
           ].join('\n'),
           patterns: {
             year: {
-              pattern: '202[5-6]',
-              defaultValue: '2026',
+              pattern: `202[5-${currentYear.toString().slice(-1)}]`,
+              defaultValue: currentYear.toString(),
             },
           },
         },

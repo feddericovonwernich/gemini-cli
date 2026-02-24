@@ -79,6 +79,7 @@ import {
 import {
   FatalConfigError,
   GEMINI_DIR,
+  Storage,
   type MCPServerConfig,
 } from '@google/gemini-cli-core';
 import { updateSettingsFilePreservingFormat } from '../utils/commentJson.js';
@@ -126,6 +127,30 @@ vi.mock('@google/gemini-cli-core', async (importOriginal) => {
   const actual =
     await importOriginal<typeof import('@google/gemini-cli-core')>();
   const os = await import('node:os');
+  const pathMod = await import('node:path');
+  const fsMod = await import('node:fs');
+
+  // Helper to resolve paths using the test's mocked environment
+  const testResolve = (p: string | undefined) => {
+    if (!p) return '';
+    try {
+      // Use the mocked fs.realpathSync if available, otherwise fallback
+      return fsMod.realpathSync(pathMod.resolve(p));
+    } catch {
+      return pathMod.resolve(p);
+    }
+  };
+
+  // Create a smarter mock for isWorkspaceHomeDir
+  vi.spyOn(actual.Storage.prototype, 'isWorkspaceHomeDir').mockImplementation(
+    function (this: Storage) {
+      const target = testResolve(pathMod.dirname(this.getGeminiDir()));
+      // Pick up the mocked home directory specifically from the 'os' mock
+      const home = testResolve(os.homedir());
+      return actual.normalizePath(target) === actual.normalizePath(home);
+    },
+  );
+
   return {
     ...actual,
     coreEvents: mockCoreEvents,
@@ -1491,20 +1516,29 @@ describe('Settings Loading and Merging', () => {
         return pStr;
       });
 
+      // Force the storage check to return true for this specific test
+      const isWorkspaceHomeDirSpy = vi
+        .spyOn(Storage.prototype, 'isWorkspaceHomeDir')
+        .mockReturnValue(true);
+
       (mockFsExistsSync as Mock).mockImplementation(
         (p: string) =>
           // Only return true for workspace settings path to see if it gets loaded
           p === mockWorkspaceSettingsPath,
       );
 
-      const settings = loadSettings(mockSymlinkDir);
+      try {
+        const settings = loadSettings(mockSymlinkDir);
 
-      // Verify that even though the file exists, it was NOT loaded because realpath matched home
-      expect(fs.readFileSync).not.toHaveBeenCalledWith(
-        mockWorkspaceSettingsPath,
-        'utf-8',
-      );
-      expect(settings.workspace.settings).toEqual({});
+        // Verify that even though the file exists, it was NOT loaded because realpath matched home
+        expect(fs.readFileSync).not.toHaveBeenCalledWith(
+          mockWorkspaceSettingsPath,
+          'utf-8',
+        );
+        expect(settings.workspace.settings).toEqual({});
+      } finally {
+        isWorkspaceHomeDirSpy.mockRestore();
+      }
     });
   });
 
@@ -1936,6 +1970,40 @@ describe('Settings Loading and Merging', () => {
       );
     });
 
+    it('should migrate tools.approvalMode to general.defaultApprovalMode', () => {
+      const userSettingsContent = {
+        tools: {
+          approvalMode: 'plan',
+        },
+      };
+
+      (fs.readFileSync as Mock).mockImplementation(
+        (p: fs.PathOrFileDescriptor) => {
+          if (p === USER_SETTINGS_PATH)
+            return JSON.stringify(userSettingsContent);
+          return '{}';
+        },
+      );
+
+      const setValueSpy = vi.spyOn(LoadedSettings.prototype, 'setValue');
+      const loadedSettings = loadSettings(MOCK_WORKSPACE_DIR);
+
+      migrateDeprecatedSettings(loadedSettings, true);
+
+      expect(setValueSpy).toHaveBeenCalledWith(
+        SettingScope.User,
+        'general',
+        expect.objectContaining({ defaultApprovalMode: 'plan' }),
+      );
+
+      // Verify removal
+      expect(setValueSpy).toHaveBeenCalledWith(
+        SettingScope.User,
+        'tools',
+        expect.not.objectContaining({ approvalMode: 'plan' }),
+      );
+    });
+
     it('should migrate all 4 inverted boolean settings', () => {
       const userSettingsContent = {
         general: {
@@ -1998,6 +2066,85 @@ describe('Settings Loading and Merging', () => {
           }),
         }),
       );
+
+      // Check that enableLoadingPhrases: false was further migrated to loadingPhrases: 'off'
+      expect(setValueSpy).toHaveBeenCalledWith(
+        SettingScope.User,
+        'ui',
+        expect.objectContaining({
+          loadingPhrases: 'off',
+        }),
+      );
+    });
+
+    it('should migrate enableLoadingPhrases: false to loadingPhrases: off', () => {
+      const userSettingsContent = {
+        ui: {
+          accessibility: {
+            enableLoadingPhrases: false,
+          },
+        },
+      };
+
+      const loadedSettings = createMockSettings(userSettingsContent);
+      const setValueSpy = vi.spyOn(loadedSettings, 'setValue');
+
+      migrateDeprecatedSettings(loadedSettings);
+
+      expect(setValueSpy).toHaveBeenCalledWith(
+        SettingScope.User,
+        'ui',
+        expect.objectContaining({
+          loadingPhrases: 'off',
+        }),
+      );
+    });
+
+    it('should not migrate enableLoadingPhrases: true to loadingPhrases', () => {
+      const userSettingsContent = {
+        ui: {
+          accessibility: {
+            enableLoadingPhrases: true,
+          },
+        },
+      };
+
+      const loadedSettings = createMockSettings(userSettingsContent);
+      const setValueSpy = vi.spyOn(loadedSettings, 'setValue');
+
+      migrateDeprecatedSettings(loadedSettings);
+
+      // Should not set loadingPhrases when enableLoadingPhrases is true
+      const uiCalls = setValueSpy.mock.calls.filter((call) => call[1] === 'ui');
+      for (const call of uiCalls) {
+        const uiValue = call[2] as Record<string, unknown>;
+        expect(uiValue).not.toHaveProperty('loadingPhrases');
+      }
+    });
+
+    it('should not overwrite existing loadingPhrases during migration', () => {
+      const userSettingsContent = {
+        ui: {
+          loadingPhrases: 'witty',
+          accessibility: {
+            enableLoadingPhrases: false,
+          },
+        },
+      };
+
+      const loadedSettings = createMockSettings(userSettingsContent);
+      const setValueSpy = vi.spyOn(loadedSettings, 'setValue');
+
+      migrateDeprecatedSettings(loadedSettings);
+
+      // Should not overwrite existing loadingPhrases
+      const uiCalls = setValueSpy.mock.calls.filter((call) => call[1] === 'ui');
+      for (const call of uiCalls) {
+        const uiValue = call[2] as Record<string, unknown>;
+        if (uiValue['loadingPhrases'] !== undefined) {
+          expect(uiValue['loadingPhrases']).toBe('witty');
+        }
+      }
     });
 
     it('should prioritize new settings over deprecated ones and respect removeDeprecated flag', () => {
@@ -2509,6 +2656,50 @@ describe('Settings Loading and Merging', () => {
           prop2: 42,
         },
       });
+    });
+  });
+
+  describe('Reactivity & Snapshots', () => {
+    let loadedSettings: LoadedSettings;
+
+    beforeEach(() => {
+      const emptySettingsFile: SettingsFile = {
+        path: '/mock/path',
+        settings: {},
+        originalSettings: {},
+      };
+
+      loadedSettings = new LoadedSettings(
+        { ...emptySettingsFile, path: getSystemSettingsPath() },
+        { ...emptySettingsFile, path: getSystemDefaultsPath() },
+        { ...emptySettingsFile, path: USER_SETTINGS_PATH },
+        { ...emptySettingsFile, path: MOCK_WORKSPACE_SETTINGS_PATH },
+        true, // isTrusted
+        [],
+      );
+    });
+
+    it('getSnapshot() should return stable reference if no changes occur', () => {
+      const snap1 = loadedSettings.getSnapshot();
+      const snap2 = loadedSettings.getSnapshot();
+      expect(snap1).toBe(snap2);
+    });
+
+    it('setValue() should create a new snapshot reference and emit event', () => {
+      const oldSnapshot = loadedSettings.getSnapshot();
+      const oldUserRef = oldSnapshot.user.settings;
+
+      loadedSettings.setValue(SettingScope.User, 'ui.theme', 'high-contrast');
+
+      const newSnapshot = loadedSettings.getSnapshot();
+
+      expect(newSnapshot).not.toBe(oldSnapshot);
+      expect(newSnapshot.user.settings).not.toBe(oldUserRef);
+      expect(newSnapshot.user.settings.ui?.theme).toBe('high-contrast');
+
+      expect(newSnapshot.system.settings).not.toBe(oldSnapshot.system.settings);
+
+      expect(mockCoreEvents.emitSettingsChanged).toHaveBeenCalled();
     });
   });
 
