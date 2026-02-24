@@ -131,6 +131,24 @@ export type MemoryImportFormat = 'tree' | 'flat';
 export type DnsResolutionOrder = 'ipv4first' | 'verbatim';
 
 /**
+ * The canonical order for setting categories.
+ */
+export const SETTING_CATEGORY_ORDER = [
+  'General',
+  'UI',
+  'Model',
+  'Context',
+  'Tools',
+  'IDE',
+  'Privacy',
+  'Extensions',
+  'Security',
+  'Experimental',
+  'Admin',
+  'Advanced',
+] as const;
+
+/**
  * The canonical schema for all settings.
  * The structure of this object defines the structure of the `Settings` type.
  * `as const` is crucial for TypeScript to infer the most specific types possible.
