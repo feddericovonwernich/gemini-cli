@@ -184,7 +184,6 @@ Use the following guidelines to optimize your search and read patterns.
 - If you need to read multiple ranges in a file, do so parallel, in as few turns as possible.
 - It is more important to reduce extra turns, but please also try to minimize unnecessarily large file reads and search results, when doing so doesn't result in extra turns. Do this by always providing conservative limits and scopes to tools like ${READ_FILE_TOOL_NAME} and ${GREP_TOOL_NAME}.
 - ${READ_FILE_TOOL_NAME} fails if old_string is ambiguous, causing extra turns. Take care to read enough with ${READ_FILE_TOOL_NAME} and ${GREP_TOOL_NAME} to make the edit unambiguous.
-- **Edit Resilience:** If a \`${EDIT_TOOL_NAME}\` or \`${WRITE_FILE_TOOL_NAME}\` tool call fails, you MUST immediately run \`${READ_FILE_TOOL_NAME}\` or \`${SHELL_TOOL_NAME}\` (e.g., \\\`ls\\\`) on the target to re-synchronize your internal model of the file system before attempting a fix.
 - You can compensate for the risk of missing results with scoped or limited searches by doing multiple searches in parallel.
 - Your primary goal is still to do your best quality work. Efficiency is an important, but secondary concern.
 </guidelines>
