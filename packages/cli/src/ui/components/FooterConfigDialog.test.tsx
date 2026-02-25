@@ -65,8 +65,8 @@ describe('<FooterConfigDialog />', () => {
 
     // Initial order: cwd, git-branch, ...
     const output = lastFrame();
-    const cwdIdx = output!.indexOf('] cwd');
-    const branchIdx = output!.indexOf('] git-branch');
+    const cwdIdx = output.indexOf('] cwd');
+    const branchIdx = output.indexOf('] git-branch');
     expect(cwdIdx).toBeGreaterThan(-1);
     expect(branchIdx).toBeGreaterThan(-1);
     expect(cwdIdx).toBeLessThan(branchIdx);
@@ -78,8 +78,8 @@ describe('<FooterConfigDialog />', () => {
 
     await waitFor(() => {
       const outputAfter = lastFrame();
-      const cwdIdxAfter = outputAfter!.indexOf('] cwd');
-      const branchIdxAfter = outputAfter!.indexOf('] git-branch');
+      const cwdIdxAfter = outputAfter.indexOf('] cwd');
+      const branchIdxAfter = outputAfter.indexOf('] git-branch');
       expect(cwdIdxAfter).toBeGreaterThan(-1);
       expect(branchIdxAfter).toBeGreaterThan(-1);
       expect(branchIdxAfter).toBeLessThan(cwdIdxAfter);
