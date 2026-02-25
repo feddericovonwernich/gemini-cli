@@ -193,12 +193,20 @@ export async function formatGrepResults(
   llmContent += `:\n---\n`;
 
   for (const filePath in matchesByFile) {
-    llmContent += `File: ${filePath}\n`;
-    matchesByFile[filePath].forEach((match) => {
-      // If isContext is undefined, assume it's a match (false)
-      const separator = match.isContext ? '-' : ':';
-      // trimEnd to avoid double newlines if line has them, but we want to preserve indentation
-      llmContent += `L${match.lineNumber}${separator} ${match.line.trimEnd()}\n`;
+    const fileMatches = matchesByFile[filePath];
+    const actualMatches = fileMatches.filter((m) => !m.isContext);
+    const matchLines = actualMatches.map((m) => m.lineNumber).join(', ');
+
+    llmContent += `File: ${filePath} (Matches at L${matchLines})\n`;
+
+    let lastLineNumber = -1;
+    fileMatches.forEach((match) => {
+      if (lastLineNumber !== -1 && match.lineNumber !== lastLineNumber + 1) {
+        llmContent += '...\n';
+      }
+      // Preserve indentation by not adding any markers to the line itself
+      llmContent += `${match.line.trimEnd()}\n`;
+      lastLineNumber = match.lineNumber;
     });
     llmContent += '---\n';
   }

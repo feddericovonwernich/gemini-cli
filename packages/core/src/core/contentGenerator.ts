@@ -202,7 +202,7 @@ export async function createContentGenerator(
           'x-gemini-api-privileged-user-id': `${installationId}`,
         };
       }
-      const httpOptions = { headers };
+      const httpOptions = { headers, timeout: 180000 };
 
       const googleGenAI = new GoogleGenAI({
         apiKey: config.apiKey === '' ? undefined : config.apiKey,
