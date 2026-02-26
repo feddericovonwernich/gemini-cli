@@ -3030,7 +3030,7 @@ describe('useGeminiStream', () => {
       });
     });
 
-    it('should set loopDetectionConfirmationRequest when LoopDetected event is received', async () => {
+    it('should set disableLoopDetectionConfirmationRequest when LoopDetected event is received', async () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
@@ -3050,9 +3050,12 @@ describe('useGeminiStream', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.loopDetectionConfirmationRequest).not.toBeNull();
         expect(
-          typeof result.current.loopDetectionConfirmationRequest?.onComplete,
+          result.current.disableLoopDetectionConfirmationRequest,
+        ).not.toBeNull();
+        expect(
+          typeof result.current.disableLoopDetectionConfirmationRequest
+            ?.onComplete,
         ).toBe('function');
       });
     });
@@ -3098,12 +3101,14 @@ describe('useGeminiStream', () => {
 
       // Wait for confirmation request to be set
       await waitFor(() => {
-        expect(result.current.loopDetectionConfirmationRequest).not.toBeNull();
+        expect(
+          result.current.disableLoopDetectionConfirmationRequest,
+        ).not.toBeNull();
       });
 
       // Simulate user selecting "disable"
       await act(async () => {
-        result.current.loopDetectionConfirmationRequest?.onComplete({
+        result.current.disableLoopDetectionConfirmationRequest?.onComplete({
           userSelection: 'disable',
         });
       });
@@ -3114,7 +3119,7 @@ describe('useGeminiStream', () => {
       );
 
       // Verify confirmation request was cleared
-      expect(result.current.loopDetectionConfirmationRequest).toBeNull();
+      expect(result.current.disableLoopDetectionConfirmationRequest).toBeNull();
 
       // Verify appropriate message was added
       expect(mockAddItem).toHaveBeenCalledWith({
@@ -3163,12 +3168,14 @@ describe('useGeminiStream', () => {
 
       // Wait for confirmation request to be set
       await waitFor(() => {
-        expect(result.current.loopDetectionConfirmationRequest).not.toBeNull();
+        expect(
+          result.current.disableLoopDetectionConfirmationRequest,
+        ).not.toBeNull();
       });
 
       // Simulate user selecting "keep"
       await act(async () => {
-        result.current.loopDetectionConfirmationRequest?.onComplete({
+        result.current.disableLoopDetectionConfirmationRequest?.onComplete({
           userSelection: 'keep',
         });
       });
@@ -3177,7 +3184,7 @@ describe('useGeminiStream', () => {
       expect(mockLoopDetectionService.disableForSession).not.toHaveBeenCalled();
 
       // Verify confirmation request was cleared
-      expect(result.current.loopDetectionConfirmationRequest).toBeNull();
+      expect(result.current.disableLoopDetectionConfirmationRequest).toBeNull();
 
       // Verify appropriate message was added
       expect(mockAddItem).toHaveBeenCalledWith({
@@ -3207,17 +3214,19 @@ describe('useGeminiStream', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.loopDetectionConfirmationRequest).not.toBeNull();
+        expect(
+          result.current.disableLoopDetectionConfirmationRequest,
+        ).not.toBeNull();
       });
 
       // Simulate user selecting "keep" for first request
       await act(async () => {
-        result.current.loopDetectionConfirmationRequest?.onComplete({
+        result.current.disableLoopDetectionConfirmationRequest?.onComplete({
           userSelection: 'keep',
         });
       });
 
-      expect(result.current.loopDetectionConfirmationRequest).toBeNull();
+      expect(result.current.disableLoopDetectionConfirmationRequest).toBeNull();
 
       // Verify first message was added
       expect(mockAddItem).toHaveBeenCalledWith({
@@ -3254,17 +3263,19 @@ describe('useGeminiStream', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.loopDetectionConfirmationRequest).not.toBeNull();
+        expect(
+          result.current.disableLoopDetectionConfirmationRequest,
+        ).not.toBeNull();
       });
 
       // Simulate user selecting "disable" for second request
       await act(async () => {
-        result.current.loopDetectionConfirmationRequest?.onComplete({
+        result.current.disableLoopDetectionConfirmationRequest?.onComplete({
           userSelection: 'disable',
         });
       });
 
-      expect(result.current.loopDetectionConfirmationRequest).toBeNull();
+      expect(result.current.disableLoopDetectionConfirmationRequest).toBeNull();
 
       // Verify second message was added
       expect(mockAddItem).toHaveBeenCalledWith({
@@ -3319,7 +3330,9 @@ describe('useGeminiStream', () => {
 
       // Then verify loop detection confirmation request was set
       await waitFor(() => {
-        expect(result.current.loopDetectionConfirmationRequest).not.toBeNull();
+        expect(
+          result.current.disableLoopDetectionConfirmationRequest,
+        ).not.toBeNull();
       });
     });
   });

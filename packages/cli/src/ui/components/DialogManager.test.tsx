@@ -83,7 +83,7 @@ describe('DialogManager', () => {
     },
     shouldShowIdePrompt: false,
     isFolderTrustDialogOpen: false,
-    loopDetectionConfirmationRequest: null,
+    disableLoopDetectionConfirmationRequest: null,
     confirmationRequest: null,
     consentRequest: null,
     isThemeDialogOpen: false,
@@ -145,7 +145,7 @@ describe('DialogManager', () => {
     ],
     [{ isFolderTrustDialogOpen: true }, 'FolderTrustDialog'],
     [
-      { loopDetectionConfirmationRequest: { onComplete: vi.fn() } },
+      { disableLoopDetectionConfirmationRequest: { onComplete: vi.fn() } },
       'LoopDetectionConfirmation',
     ],
     [

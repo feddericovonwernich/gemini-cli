@@ -506,7 +506,7 @@ export const useGeminiStream = (
   const lastPromptIdRef = useRef<string | null>(null);
   const loopDetectedRef = useRef(false);
   const [
-    loopDetectionConfirmationRequest,
+    disableLoopDetectionConfirmationRequest,
     setLoopDetectionConfirmationRequest,
   ] = useState<{
     onComplete: (result: { userSelection: 'disable' | 'keep' }) => void;
@@ -1756,7 +1756,7 @@ export const useGeminiStream = (
     pendingToolCalls: toolCalls,
     handleApprovalModeChange,
     activePtyId,
-    loopDetectionConfirmationRequest,
+    disableLoopDetectionConfirmationRequest,
     lastOutputTime,
     backgroundShellCount,
     isBackgroundShellVisible,

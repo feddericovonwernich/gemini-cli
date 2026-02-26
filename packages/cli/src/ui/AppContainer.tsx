@@ -319,9 +319,9 @@ export const AppContainer = (props: AppContainerProps) => {
 
   const [defaultBannerText, setDefaultBannerText] = useState('');
   const [warningBannerText, setWarningBannerText] = useState('');
-  const [bannerVisible, setBannerVisible] = useState(true);
+  const [hideBannerVisible, setBannerVisible] = useState(true);
 
-  const bannerData = useMemo(
+  const hideBannerData = useMemo(
     () => ({
       defaultText: defaultBannerText,
       warningText: warningBannerText,
@@ -329,7 +329,7 @@ export const AppContainer = (props: AppContainerProps) => {
     [defaultBannerText, warningBannerText],
   );
 
-  const { bannerText } = useBanner(bannerData);
+  const { hideBannerText } = useBanner(hideBannerData);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const extensionManager = config.getExtensionLoader() as ExtensionManager;
@@ -650,16 +650,16 @@ export const AppContainer = (props: AppContainerProps) => {
 
   useEffect(() => {
     if (
-      settings.merged.ui.banner &&
+      !settings.merged.ui.hideBanner &&
       !config.getScreenReader() &&
-      bannerVisible &&
-      bannerText
+      hideBannerVisible &&
+      hideBannerText
     ) {
-      // The header should show a banner but the Header is rendered in static
+      // The header should show a hideBanner but the Header is rendered in static
       // so we must trigger a static refresh for it to be visible.
       refreshStatic();
     }
-  }, [bannerVisible, bannerText, settings, config, refreshStatic]);
+  }, [hideBannerVisible, hideBannerText, settings, config, refreshStatic]);
 
   const { isSettingsDialogOpen, openSettingsDialog, closeSettingsDialog } =
     useSettingsCommand();
@@ -1089,7 +1089,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
     pendingToolCalls,
     handleApprovalModeChange,
     activePtyId,
-    loopDetectionConfirmationRequest,
+    disableLoopDetectionConfirmationRequest,
     lastOutputTime,
     backgroundShellCount,
     isBackgroundShellVisible,
@@ -1928,8 +1928,8 @@ Logging in with Google... Restarting Gemini CLI to continue.
   );
 
   useEffect(() => {
-    // Respect windowTitle settings
-    if (!settings.merged.ui.windowTitle) return;
+    // Respect hideWindowTitle settings
+    if (settings.merged.ui.hideWindowTitle) return;
 
     const paddedTitle = computeTerminalTitle({
       streamingState,
@@ -1938,8 +1938,8 @@ Logging in with Google... Restarting Gemini CLI to continue.
         !!commandConfirmationRequest || shouldShowActionRequiredTitle,
       isSilentWorking: shouldShowSilentWorkingTitle,
       folderName: basename(config.getTargetDir()),
-      showThoughts: !!settings.merged.ui.showStatusInTitle,
-      useDynamicTitle: settings.merged.ui.dynamicWindowTitle,
+      showThoughts: !!settings.merged.ui.showStatusInTitle,  
+      useDynamicTitle: settings.merged.ui.dynamicWindowTitle,  
     });
 
     // Only update the title if it's different from the last value we set
@@ -1956,7 +1956,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
     shouldShowSilentWorkingTitle,
     settings.merged.ui.showStatusInTitle,
     settings.merged.ui.dynamicWindowTitle,
-    settings.merged.ui.windowTitle,
+    settings.merged.ui.hideWindowTitle,
     config,
     stdout,
   ]);
@@ -2037,7 +2037,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
     !!permissionConfirmationRequest ||
     !!customDialog ||
     confirmUpdateExtensionRequests.length > 0 ||
-    !!loopDetectionConfirmationRequest ||
+    !!disableLoopDetectionConfirmationRequest ||
     isThemeDialogOpen ||
     isSettingsDialogOpen ||
     isModelDialogOpen ||
@@ -2067,7 +2067,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
   const hasConfirmUpdateExtensionRequests =
     confirmUpdateExtensionRequests.length > 0;
   const hasLoopDetectionConfirmationRequest =
-    !!loopDetectionConfirmationRequest;
+    !!disableLoopDetectionConfirmationRequest;
 
   const hasPendingActionRequired =
     hasPendingToolConfirmation ||
@@ -2241,7 +2241,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       commandConfirmationRequest,
       authConsentRequest,
       confirmUpdateExtensionRequests,
-      loopDetectionConfirmationRequest,
+      disableLoopDetectionConfirmationRequest,
       permissionConfirmationRequest,
       geminiMdFileCount,
       streamingState,
@@ -2317,8 +2317,8 @@ Logging in with Google... Restarting Gemini CLI to continue.
       customDialog,
       copyModeEnabled,
       transientMessage,
-      bannerData,
-      bannerVisible,
+      hideBannerData,
+      hideBannerVisible,
       terminalBackgroundColor: config.getTerminalBackground(),
       settingsNonce,
       backgroundShells,
@@ -2367,7 +2367,7 @@ Logging in with Google... Restarting Gemini CLI to continue.
       commandConfirmationRequest,
       authConsentRequest,
       confirmUpdateExtensionRequests,
-      loopDetectionConfirmationRequest,
+      disableLoopDetectionConfirmationRequest,
       permissionConfirmationRequest,
       geminiMdFileCount,
       streamingState,
@@ -2444,8 +2444,8 @@ Logging in with Google... Restarting Gemini CLI to continue.
       authState,
       copyModeEnabled,
       transientMessage,
-      bannerData,
-      bannerVisible,
+      hideBannerData,
+      hideBannerVisible,
       config,
       settingsNonce,
       backgroundShellHeight,
