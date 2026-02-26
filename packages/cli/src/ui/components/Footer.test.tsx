@@ -8,6 +8,13 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { renderWithProviders } from '../../test-utils/render.js';
 import { Footer } from './Footer.js';
 import { createMockSettings } from '../../test-utils/settings.js';
+import path from 'node:path';
+
+// Normalize paths to POSIX slashes for stable cross-platform snapshots.
+const normalizeFrame = (frame: string | undefined) => {
+  if (!frame) return frame;
+  return frame.replace(/\\/g, '/').replace(/[A-Za-z]:\/(Users)/g, '/$1');
+};
 
 const mockSessionStats = {
   sessionId: 'test-session-id',
@@ -94,7 +101,9 @@ describe('<Footer />', () => {
       const output = lastFrame();
       expect(output).toBeDefined();
       // Should contain some part of the path, likely shortened
-      expect(output).toContain('directories/to/make/it/long');
+      expect(output).toContain(
+        path.join('directories', 'to', 'make', 'it', 'long'),
+      );
       unmount();
     });
 
@@ -109,7 +118,9 @@ describe('<Footer />', () => {
       await waitUntilReady();
       const output = lastFrame();
       expect(output).toBeDefined();
-      expect(output).toContain('directories/to/make/it/long');
+      expect(output).toContain(
+        path.join('directories', 'to', 'make', 'it', 'long'),
+      );
       unmount();
     });
   });
@@ -192,7 +203,7 @@ describe('<Footer />', () => {
     );
     await waitUntilReady();
     expect(lastFrame()).toContain('15%');
-    expect(lastFrame()).toMatchSnapshot();
+    expect(normalizeFrame(lastFrame())).toMatchSnapshot();
     unmount();
   });
 
@@ -218,7 +229,7 @@ describe('<Footer />', () => {
     );
     await waitUntilReady();
     expect(lastFrame()).not.toContain('Usage remaining');
-    expect(lastFrame()).toMatchSnapshot();
+    expect(normalizeFrame(lastFrame())).toMatchSnapshot();
     unmount();
   });
 
@@ -244,7 +255,7 @@ describe('<Footer />', () => {
     );
     await waitUntilReady();
     expect(lastFrame()?.toLowerCase()).toContain('limit reached');
-    expect(lastFrame()).toMatchSnapshot();
+    expect(normalizeFrame(lastFrame())).toMatchSnapshot();
     unmount();
   });
 
@@ -376,7 +387,9 @@ describe('<Footer />', () => {
         },
       );
       await waitUntilReady();
-      expect(lastFrame()).toMatchSnapshot('complete-footer-wide');
+      expect(normalizeFrame(lastFrame())).toMatchSnapshot(
+        'complete-footer-wide',
+      );
       unmount();
     });
 
@@ -398,7 +411,9 @@ describe('<Footer />', () => {
         },
       );
       await waitUntilReady();
-      expect(lastFrame({ allowEmpty: true })).toMatchSnapshot('footer-minimal');
+      expect(normalizeFrame(lastFrame({ allowEmpty: true }))).toMatchSnapshot(
+        'footer-minimal',
+      );
       unmount();
     });
 
@@ -420,7 +435,7 @@ describe('<Footer />', () => {
         },
       );
       await waitUntilReady();
-      expect(lastFrame()).toMatchSnapshot('footer-no-model');
+      expect(normalizeFrame(lastFrame())).toMatchSnapshot('footer-no-model');
       unmount();
     });
 
@@ -442,7 +457,9 @@ describe('<Footer />', () => {
         },
       );
       await waitUntilReady();
-      expect(lastFrame()).toMatchSnapshot('footer-only-sandbox');
+      expect(normalizeFrame(lastFrame())).toMatchSnapshot(
+        'footer-only-sandbox',
+      );
       unmount();
     });
 
@@ -502,7 +519,9 @@ describe('<Footer />', () => {
         },
       );
       await waitUntilReady();
-      expect(lastFrame()).toMatchSnapshot('complete-footer-narrow');
+      expect(normalizeFrame(lastFrame())).toMatchSnapshot(
+        'complete-footer-narrow',
+      );
       unmount();
     });
   });
