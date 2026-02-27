@@ -116,6 +116,7 @@ export interface RetryAttemptPayload {
   error?: string;
   statusCode?: number;
   retryAfterMs?: number;
+  responseHeaders?: string;
   model: string;
 }
 

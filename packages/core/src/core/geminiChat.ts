@@ -113,48 +113,43 @@ function parseRetryAfterHeader(value: string): number | undefined {
   return Math.max(0, retryDateMs - Date.now());
 }
 
-function getHeaderValue(headers: unknown, name: string): string | undefined {
+function toHeaderRecord(headers: unknown): Record<string, string> | undefined {
   if (typeof headers !== 'object' || headers === null) {
     return undefined;
   }
 
-  const lowerName = name.toLowerCase();
-  const headerContainer = headers as { get?: (headerName: string) => unknown };
+  const normalizedHeaders: Record<string, string> = {};
 
-  if (typeof headerContainer.get === 'function') {
-    const headerValue =
-      headerContainer.get(name) ?? headerContainer.get(lowerName);
-    if (typeof headerValue === 'string') {
-      return headerValue;
-    }
+  const headerContainer = headers as {
+    forEach?: (callback: (value: string, key: string) => void) => void;
+  };
+  if (typeof headerContainer.forEach === 'function') {
+    headerContainer.forEach((value, key) => {
+      normalizedHeaders[key.toLowerCase()] = String(value);
+    });
   }
 
   for (const [key, value] of Object.entries(headers)) {
-    if (key.toLowerCase() !== lowerName) {
-      continue;
-    }
-
+    const normalizedKey = key.toLowerCase();
     if (typeof value === 'string') {
-      return value;
-    }
-
-    if (typeof value === 'number') {
-      return String(value);
-    }
-
-    if (
+      normalizedHeaders[normalizedKey] = value;
+    } else if (typeof value === 'number') {
+      normalizedHeaders[normalizedKey] = String(value);
+    } else if (
       Array.isArray(value) &&
       value.length > 0 &&
       typeof value[0] === 'string'
     ) {
-      return value[0];
+      normalizedHeaders[normalizedKey] = value.join(', ');
     }
   }
 
-  return undefined;
+  return Object.keys(normalizedHeaders).length > 0
+    ? normalizedHeaders
+    : undefined;
 }
 
-function getRetryAfterMs(error: unknown): number | undefined {
+function getRetryHeaders(error: unknown): Record<string, string> | undefined {
   const maxDepth = 5;
   let currentError: unknown = error;
 
@@ -170,15 +165,10 @@ function getRetryAfterMs(error: unknown): number | undefined {
         : undefined;
     const directHeaders: unknown = Reflect.get(currentError, 'headers');
 
-    const retryAfterHeader =
-      getHeaderValue(responseHeaders, 'retry-after') ??
-      getHeaderValue(directHeaders, 'retry-after');
-
-    if (retryAfterHeader) {
-      const retryAfterMs = parseRetryAfterHeader(retryAfterHeader);
-      if (retryAfterMs !== undefined) {
-        return retryAfterMs;
-      }
+    const headers =
+      toHeaderRecord(responseHeaders) ?? toHeaderRecord(directHeaders);
+    if (headers) {
+      return headers;
     }
 
     const cause: unknown = Reflect.get(currentError, 'cause');
@@ -190,6 +180,29 @@ function getRetryAfterMs(error: unknown): number | undefined {
   }
 
   return undefined;
+}
+
+function getRetryHeadersForDisplay(error: unknown): string | undefined {
+  const headers = getRetryHeaders(error);
+  if (!headers) {
+    return undefined;
+  }
+
+  const headerPairs = Object.entries(headers)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, value]) => `${key}: ${value}`);
+  const joinedHeaders = headerPairs.join('; ');
+  const maxLength = 300;
+
+  return joinedHeaders.length > maxLength
+    ? `${joinedHeaders.slice(0, maxLength)}...`
+    : joinedHeaders;
+}
+
+function getRetryAfterMs(error: unknown): number | undefined {
+  const headers = getRetryHeaders(error);
+  const retryAfterHeader = headers?.['retry-after'];
+  return retryAfterHeader ? parseRetryAfterHeader(retryAfterHeader) : undefined;
 }
 
 export const SYNTHETIC_THOUGHT_SIGNATURE = 'skip_thought_signature_validator';
@@ -538,6 +551,7 @@ export class GeminiChat {
                   error: error instanceof Error ? error.message : String(error),
                   statusCode: getRetryStatusCode(error),
                   retryAfterMs: getRetryAfterMs(error),
+                  responseHeaders: getRetryHeadersForDisplay(error),
                   model,
                 });
                 await new Promise((res) =>
@@ -749,6 +763,7 @@ export class GeminiChat {
           error: error instanceof Error ? error.message : String(error),
           statusCode: getRetryStatusCode(error),
           retryAfterMs: getRetryAfterMs(error),
+          responseHeaders: getRetryHeadersForDisplay(error),
           model: lastModelToUse,
         });
       },

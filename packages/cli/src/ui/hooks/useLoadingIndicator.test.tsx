@@ -220,6 +220,7 @@ describe('useLoadingIndicator', () => {
       delayMs: 1000,
       statusCode: 503,
       retryAfterMs: 12000,
+      responseHeaders: 'retry-after: 12; content-type: application/json',
     };
     const { result } = renderLoadingIndicatorHook(
       StreamingState.Responding,
@@ -233,6 +234,9 @@ describe('useLoadingIndicator', () => {
       'Last status code response: 503',
     );
     expect(result.current.currentLoadingPhrase).toContain('Retry-After: 12s');
+    expect(result.current.currentLoadingPhrase).toContain(
+      'Response headers: retry-after: 12; content-type: application/json',
+    );
   });
 
   it('should show no phrases when loadingPhrasesMode is "off"', () => {

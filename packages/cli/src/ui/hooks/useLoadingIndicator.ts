@@ -77,9 +77,12 @@ export const useLoadingIndicator = ({
     retryStatus?.retryAfterMs !== undefined
       ? ` - Retry-After: ${Math.ceil(retryStatus.retryAfterMs / 1000)}s`
       : '';
+  const responseHeadersText = retryStatus?.responseHeaders
+    ? ` - Response headers: ${retryStatus.responseHeaders}`
+    : '';
 
   const retryPhrase = retryStatus
-    ? `Trying to reach ${getDisplayString(retryStatus.model)} (Attempt ${retryStatus.attempt + 1}/${retryStatus.maxAttempts})${retryStatusCodeText}${retryAfterText}`
+    ? `Trying to reach ${getDisplayString(retryStatus.model)} (Attempt ${retryStatus.attempt + 1}/${retryStatus.maxAttempts})${retryStatusCodeText}${retryAfterText}${responseHeadersText}`
     : null;
 
   return {
