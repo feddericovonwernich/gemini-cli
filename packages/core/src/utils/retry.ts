@@ -102,6 +102,109 @@ function getNetworkErrorCode(error: unknown): string | undefined {
 
 const FETCH_FAILED_MESSAGE = 'fetch failed';
 
+const CONSERVATIVE_QUOTA_INITIAL_DELAY_MS = 10_000;
+const CONSERVATIVE_QUOTA_MAX_DELAY_MS = 180_000;
+
+function parseRetryAfterHeader(value: string): number | undefined {
+  const trimmed = value.trim();
+
+  if (/^\d+$/.test(trimmed)) {
+    return Number.parseInt(trimmed, 10) * 1000;
+  }
+
+  const retryAtMs = Date.parse(trimmed);
+  if (Number.isNaN(retryAtMs)) {
+    return undefined;
+  }
+
+  return Math.max(0, retryAtMs - Date.now());
+}
+
+function getHeaderValue(headers: unknown, name: string): string | undefined {
+  if (typeof headers !== 'object' || headers === null) {
+    return undefined;
+  }
+
+  const lowerName = name.toLowerCase();
+
+  const container = headers as {
+    get?: (headerName: string) => unknown;
+  };
+
+  if (typeof container.get === 'function') {
+    const value = container.get(name) ?? container.get(lowerName);
+    if (typeof value === 'string') {
+      return value;
+    }
+  }
+
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() !== lowerName) {
+      continue;
+    }
+
+    if (typeof value === 'string') {
+      return value;
+    }
+    if (typeof value === 'number') {
+      return String(value);
+    }
+    if (
+      Array.isArray(value) &&
+      value.length > 0 &&
+      typeof value[0] === 'string'
+    ) {
+      return value[0];
+    }
+  }
+
+  return undefined;
+}
+
+function getRetryAfterMsFromError(error: unknown): number | undefined {
+  let current: unknown = error;
+  const maxDepth = 5;
+
+  for (let depth = 0; depth < maxDepth; depth++) {
+    if (typeof current !== 'object' || current === null) {
+      return undefined;
+    }
+
+    const response: unknown = Reflect.get(current, 'response');
+    const responseHeaders: unknown =
+      typeof response === 'object' && response !== null
+        ? Reflect.get(response, 'headers')
+        : undefined;
+    const directHeaders: unknown = Reflect.get(current, 'headers');
+
+    const retryAfterHeader =
+      getHeaderValue(responseHeaders, 'retry-after') ??
+      getHeaderValue(directHeaders, 'retry-after');
+
+    if (retryAfterHeader) {
+      const retryAfterMs = parseRetryAfterHeader(retryAfterHeader);
+      if (retryAfterMs !== undefined) {
+        return retryAfterMs;
+      }
+    }
+
+    const cause: unknown = Reflect.get(current, 'cause');
+    if (cause === undefined) {
+      return undefined;
+    }
+    current = cause;
+  }
+
+  return undefined;
+}
+
+function randomBetween(min: number, max: number): number {
+  if (max <= min) {
+    return min;
+  }
+  return min + Math.random() * (max - min);
+}
+
 /**
  * Default predicate function to determine if a retry should be attempted.
  * Retries on 429 (Too Many Requests) and 5xx server errors.
@@ -302,22 +405,50 @@ export async function retryWithBackoff<T>(
             : error;
         }
 
-        if (
-          classifiedError instanceof RetryableQuotaError &&
-          classifiedError.retryDelayMs !== undefined
-        ) {
-          currentDelay = Math.max(currentDelay, classifiedError.retryDelayMs);
-          // Positive jitter up to +20% while respecting server minimum delay
-          const jitter = currentDelay * 0.2 * Math.random();
-          const delayWithJitter = currentDelay + jitter;
+        const isQuotaOrCapacityError =
+          classifiedError instanceof RetryableQuotaError ||
+          errorCode === 429 ||
+          errorCode === 499 ||
+          errorCode === 503;
+
+        if (isQuotaOrCapacityError) {
+          const retryAfterMs = getRetryAfterMsFromError(error);
+          const retryDelayMsFromError =
+            classifiedError instanceof RetryableQuotaError
+              ? classifiedError.retryDelayMs
+              : undefined;
+          const serverDelayMs = Math.max(
+            retryDelayMsFromError ?? 0,
+            retryAfterMs ?? 0,
+          );
+
+          const quotaBaseDelayMs = Math.max(
+            initialDelayMs,
+            CONSERVATIVE_QUOTA_INITIAL_DELAY_MS,
+            serverDelayMs,
+          );
+          const quotaMaxDelayMs = Math.max(
+            maxDelayMs,
+            CONSERVATIVE_QUOTA_MAX_DELAY_MS,
+            serverDelayMs,
+          );
+
+          // Conservative decorrelated jitter:
+          // next = random_between(baseDelay, previousDelay * 3), clamped to max.
+          const upperBound = Math.max(quotaBaseDelayMs, currentDelay * 3);
+          const delayWithJitter = Math.min(
+            quotaMaxDelayMs,
+            randomBetween(quotaBaseDelayMs, upperBound),
+          );
+
           debugLogger.warn(
-            `Attempt ${attempt} failed: ${classifiedError.message}. Retrying after ${Math.round(delayWithJitter)}ms...`,
+            `Attempt ${attempt} failed: ${classifiedError instanceof Error ? classifiedError.message : String(classifiedError)}. Retrying after ${Math.round(delayWithJitter)}ms...`,
           );
           if (onRetry) {
             onRetry(attempt, error, delayWithJitter);
           }
           await delay(delayWithJitter, signal);
-          currentDelay = Math.min(maxDelayMs, currentDelay * 2);
+          currentDelay = Math.min(quotaMaxDelayMs, delayWithJitter);
           continue;
         } else {
           const errorStatus = getErrorStatus(error);

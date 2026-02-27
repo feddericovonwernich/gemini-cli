@@ -332,6 +332,60 @@ describe('retryWithBackoff', () => {
     });
   });
 
+  it('should honor Retry-After header for quota/capacity errors', async () => {
+    const setTimeoutSpy = vi.spyOn(global, 'setTimeout');
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    const mockFn = vi.fn(async () => {
+      const error = new Error('Too Many Requests') as HttpError & {
+        headers: Record<string, string>;
+      };
+      error.status = 429;
+      error.headers = { 'retry-after': '60' };
+      throw error;
+    });
+
+    const promise = retryWithBackoff(mockFn, {
+      maxAttempts: 2,
+      initialDelayMs: 100,
+      maxDelayMs: 30_000,
+    });
+
+    await Promise.all([
+      expect(promise).rejects.toThrow(),
+      vi.runAllTimersAsync(),
+    ]);
+
+    expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 60_000);
+  });
+
+  it('should use conservative quota backoff profile beyond maxDelayMs', async () => {
+    const setTimeoutSpy = vi.spyOn(global, 'setTimeout');
+    vi.spyOn(Math, 'random').mockReturnValue(1);
+
+    const mockFn = vi.fn(async () => {
+      const error: HttpError = new Error('Too Many Requests');
+      error.status = 429;
+      throw error;
+    });
+
+    const promise = retryWithBackoff(mockFn, {
+      maxAttempts: 5,
+      initialDelayMs: 100,
+      maxDelayMs: 30_000,
+    });
+
+    await Promise.all([
+      expect(promise).rejects.toThrow(),
+      vi.runAllTimersAsync(),
+    ]);
+
+    const delays = setTimeoutSpy.mock.calls.map((call) => call[1] as number);
+    expect(delays[0]).toBe(10_000);
+    expect(delays).toContain(90_000);
+    expect(delays).toContain(180_000);
+  });
+
   describe('Fetch error retries', () => {
     it("should retry on 'fetch failed' when retryFetchErrors is true", async () => {
       const mockFn = vi.fn();
