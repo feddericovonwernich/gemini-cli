@@ -20,6 +20,8 @@ import { toParts } from '../code_assist/converter.js';
 import { createUserContent, FinishReason } from '@google/genai';
 import { retryWithBackoff, isRetryableError } from '../utils/retry.js';
 import type { ValidationRequiredError } from '../utils/googleQuotaErrors.js';
+import { parseGoogleApiError } from '../utils/googleErrors.js';
+import { getErrorStatus } from '../utils/httpErrors.js';
 import type { Config } from '../config/config.js';
 import {
   resolveModel,
@@ -85,6 +87,16 @@ const INVALID_CONTENT_RETRY_OPTIONS: ContentRetryOptions = {
   maxAttempts: 2, // 1 initial call + 1 retry
   initialDelayMs: 500,
 };
+
+function getRetryStatusCode(error: unknown): number | undefined {
+  const statusCode = getErrorStatus(error);
+  if (statusCode !== undefined) {
+    return statusCode;
+  }
+
+  const googleApiError = parseGoogleApiError(error);
+  return googleApiError?.code;
+}
 
 export const SYNTHETIC_THOUGHT_SIGNATURE = 'skip_thought_signature_validator';
 
@@ -430,6 +442,7 @@ export class GeminiChat {
                   maxAttempts,
                   delayMs: delayMs * (attempt + 1),
                   error: error instanceof Error ? error.message : String(error),
+                  statusCode: getRetryStatusCode(error),
                   model,
                 });
                 await new Promise((res) =>
@@ -639,6 +652,7 @@ export class GeminiChat {
           maxAttempts: availabilityMaxAttempts ?? this.config.getMaxAttempts(),
           delayMs,
           error: error instanceof Error ? error.message : String(error),
+          statusCode: getRetryStatusCode(error),
           model: lastModelToUse,
         });
       },

@@ -114,6 +114,7 @@ export interface RetryAttemptPayload {
   maxAttempts: number;
   delayMs: number;
   error?: string;
+  statusCode?: number;
   model: string;
 }
 
