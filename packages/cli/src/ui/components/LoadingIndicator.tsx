@@ -59,6 +59,8 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
     currentLoadingPhrase !== INTERACTIVE_SHELL_WAITING_PHRASE &&
     Boolean(thought?.subject?.trim());
   const thinkingIndicator = hasThoughtIndicator ? '💬 ' : '';
+  const shouldWrapLoadingPhrase =
+    currentLoadingPhrase?.includes('Response headers:') ?? false;
 
   const cancelAndTimerContent =
     showCancelAndTimer &&
@@ -79,7 +81,11 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
           />
         </Box>
         {primaryText && (
-          <Text color={theme.text.primary} italic wrap="truncate-end">
+          <Text
+            color={theme.text.primary}
+            italic
+            wrap={shouldWrapLoadingPhrase ? undefined : 'truncate-end'}
+          >
             {thinkingIndicator}
             {primaryText}
           </Text>
@@ -113,7 +119,11 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
             />
           </Box>
           {primaryText && (
-            <Text color={theme.text.primary} italic wrap="truncate-end">
+            <Text
+              color={theme.text.primary}
+              italic
+              wrap={shouldWrapLoadingPhrase ? undefined : 'truncate-end'}
+            >
               {thinkingIndicator}
               {primaryText}
             </Text>

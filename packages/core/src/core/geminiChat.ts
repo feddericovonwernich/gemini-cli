@@ -191,12 +191,8 @@ function getRetryHeadersForDisplay(error: unknown): string | undefined {
   const headerPairs = Object.entries(headers)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, value]) => `${key}: ${value}`);
-  const joinedHeaders = headerPairs.join('; ');
-  const maxLength = 300;
 
-  return joinedHeaders.length > maxLength
-    ? `${joinedHeaders.slice(0, maxLength)}...`
-    : joinedHeaders;
+  return headerPairs.join('; ');
 }
 
 function getRetryAfterMs(error: unknown): number | undefined {
