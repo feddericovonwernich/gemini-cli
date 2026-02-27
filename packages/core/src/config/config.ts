@@ -348,7 +348,6 @@ export interface ExtensionInstallMetadata {
   allowPreRelease?: boolean;
 }
 
-import { DEFAULT_MAX_ATTEMPTS } from '../utils/retry.js';
 import type { FileFilteringOptions } from './constants.js';
 import {
   DEFAULT_FILE_FILTERING_OPTIONS,
@@ -1772,8 +1771,9 @@ export class Config {
     if (this.experimentalJitContext && this.contextManager) {
       await this.contextManager.refresh();
     } else {
-      const { refreshServerHierarchicalMemory } =
-        await import('../utils/memoryDiscovery.js');
+      const { refreshServerHierarchicalMemory } = await import(
+        '../utils/memoryDiscovery.js'
+      );
       await refreshServerHierarchicalMemory(this);
     }
     if (this.geminiClient?.isInitialized()) {
