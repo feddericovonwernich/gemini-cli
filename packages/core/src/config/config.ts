@@ -979,10 +979,7 @@ export class Config {
       },
     };
     this.retryFetchErrors = params.retryFetchErrors ?? false;
-    this.maxAttempts = Math.min(
-      params.maxAttempts ?? DEFAULT_MAX_ATTEMPTS,
-      DEFAULT_MAX_ATTEMPTS,
-    );
+    this.maxAttempts = 15;
     this.disableYoloMode = params.disableYoloMode ?? false;
     this.rawOutput = params.rawOutput ?? false;
     this.acceptRawOutputRisk = params.acceptRawOutputRisk ?? false;
@@ -1775,9 +1772,8 @@ export class Config {
     if (this.experimentalJitContext && this.contextManager) {
       await this.contextManager.refresh();
     } else {
-      const { refreshServerHierarchicalMemory } = await import(
-        '../utils/memoryDiscovery.js'
-      );
+      const { refreshServerHierarchicalMemory } =
+        await import('../utils/memoryDiscovery.js');
       await refreshServerHierarchicalMemory(this);
     }
     if (this.geminiClient?.isInitialized()) {
