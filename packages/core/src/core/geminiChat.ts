@@ -98,6 +98,100 @@ function getRetryStatusCode(error: unknown): number | undefined {
   return googleApiError?.code;
 }
 
+function parseRetryAfterHeader(value: string): number | undefined {
+  const trimmedValue = value.trim();
+
+  if (/^\d+$/.test(trimmedValue)) {
+    return Number.parseInt(trimmedValue, 10) * 1000;
+  }
+
+  const retryDateMs = Date.parse(trimmedValue);
+  if (Number.isNaN(retryDateMs)) {
+    return undefined;
+  }
+
+  return Math.max(0, retryDateMs - Date.now());
+}
+
+function getHeaderValue(headers: unknown, name: string): string | undefined {
+  if (typeof headers !== 'object' || headers === null) {
+    return undefined;
+  }
+
+  const lowerName = name.toLowerCase();
+  const headerContainer = headers as { get?: (headerName: string) => unknown };
+
+  if (typeof headerContainer.get === 'function') {
+    const headerValue =
+      headerContainer.get(name) ?? headerContainer.get(lowerName);
+    if (typeof headerValue === 'string') {
+      return headerValue;
+    }
+  }
+
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() !== lowerName) {
+      continue;
+    }
+
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    if (typeof value === 'number') {
+      return String(value);
+    }
+
+    if (
+      Array.isArray(value) &&
+      value.length > 0 &&
+      typeof value[0] === 'string'
+    ) {
+      return value[0];
+    }
+  }
+
+  return undefined;
+}
+
+function getRetryAfterMs(error: unknown): number | undefined {
+  const maxDepth = 5;
+  let currentError: unknown = error;
+
+  for (let depth = 0; depth < maxDepth; depth++) {
+    if (typeof currentError !== 'object' || currentError === null) {
+      return undefined;
+    }
+
+    const response: unknown = Reflect.get(currentError, 'response');
+    const responseHeaders: unknown =
+      typeof response === 'object' && response !== null
+        ? Reflect.get(response, 'headers')
+        : undefined;
+    const directHeaders: unknown = Reflect.get(currentError, 'headers');
+
+    const retryAfterHeader =
+      getHeaderValue(responseHeaders, 'retry-after') ??
+      getHeaderValue(directHeaders, 'retry-after');
+
+    if (retryAfterHeader) {
+      const retryAfterMs = parseRetryAfterHeader(retryAfterHeader);
+      if (retryAfterMs !== undefined) {
+        return retryAfterMs;
+      }
+    }
+
+    const cause: unknown = Reflect.get(currentError, 'cause');
+    if (cause === undefined) {
+      return undefined;
+    }
+
+    currentError = cause;
+  }
+
+  return undefined;
+}
+
 export const SYNTHETIC_THOUGHT_SIGNATURE = 'skip_thought_signature_validator';
 
 /**
@@ -443,6 +537,7 @@ export class GeminiChat {
                   delayMs: delayMs * (attempt + 1),
                   error: error instanceof Error ? error.message : String(error),
                   statusCode: getRetryStatusCode(error),
+                  retryAfterMs: getRetryAfterMs(error),
                   model,
                 });
                 await new Promise((res) =>
@@ -653,6 +748,7 @@ export class GeminiChat {
           delayMs,
           error: error instanceof Error ? error.message : String(error),
           statusCode: getRetryStatusCode(error),
+          retryAfterMs: getRetryAfterMs(error),
           model: lastModelToUse,
         });
       },

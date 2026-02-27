@@ -69,8 +69,17 @@ export const useLoadingIndicator = ({
     prevStreamingStateRef.current = streamingState;
   }, [streamingState, elapsedTimeFromTimer]);
 
+  const retryStatusCodeText =
+    retryStatus?.statusCode !== undefined
+      ? ` - Last status code response: ${retryStatus.statusCode}`
+      : '';
+  const retryAfterText =
+    retryStatus?.retryAfterMs !== undefined
+      ? ` - Retry-After: ${Math.ceil(retryStatus.retryAfterMs / 1000)}s`
+      : '';
+
   const retryPhrase = retryStatus
-    ? `Trying to reach ${getDisplayString(retryStatus.model)} (Attempt ${retryStatus.attempt + 1}/${retryStatus.maxAttempts})${retryStatus.statusCode ? ` - Last status code response: ${retryStatus.statusCode}` : ''}`
+    ? `Trying to reach ${getDisplayString(retryStatus.model)} (Attempt ${retryStatus.attempt + 1}/${retryStatus.maxAttempts})${retryStatusCodeText}${retryAfterText}`
     : null;
 
   return {
